@@ -85,8 +85,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function pista(){
         let pistaButton = document.getElementById("clue");
         if (pistaButton.classList.contains("disabled")) return;
-
         pistaButton.classList.add("disabled");
+
+        for (let i=0; i<paraula.length; i++){
+            let tecla = buscarTecla(paraula.charAt(i));
+            if (!tecla.classList.contains("wrongPos") && !tecla.classList.contains("good")) {
+                tecla.classList.add("wrongPos");
+                return;
+            }
+        }
+
+        // EL JUGADOR JA HA DESCOBERT TOTES LES LLETRES
+        alert("Ja has descobert totes les lletres, ja no pots utilitzar la pista!");
     }
 
     function gameOver(gameOverCondition){
@@ -183,13 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function pintarEspai(espai, multiplicadorEspera, classe){
-        let teclaTrobada = false;
-        for (let i=0; i<ARRAY_TECLES.length && !teclaTrobada; i++){
-            if (espai.innerHTML == ARRAY_TECLES[i].innerHTML) {
-                ARRAY_TECLES[i].classList.add(classe);
-                teclaTrobada = true;
-            }
-        }
+        buscarTecla(espai.innerHTML).classList.add(classe);
 
         let espera = 0.3 * multiplicadorEspera;
         espai.style.transitionDelay = espera + "s";

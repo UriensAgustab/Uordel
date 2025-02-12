@@ -35,7 +35,7 @@ header .headerCenter {
     align-items: center;
 }
 
-header .headerLeft {
+header .headerRight {
     grid-column-start: 3;
     display: flex;
     justify-content: center;
@@ -198,7 +198,7 @@ header .item.disabled img{
     z-index: 99;
     background-color: black;
 
-    display: flex;
+    display: none;
     flex-direction: column;
     justify-content: center;
     align-items: center;
