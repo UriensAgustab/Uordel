@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let arrayEspais = document.querySelectorAll("#wordsGrid .row div");
         document.getElementById("clue").classList.remove("disabled");
         GAMEOVER_SCREEN.style.display = "none";
+        GAMEOVER_SCREEN.classList.remove("fadeIn");
         GAMEOVER_SCREEN.classList.remove("victory");
         GAMEOVER_SCREEN.classList.remove("defeat");
         for (let i=0; i<arrayEspais.length; i++){
@@ -100,6 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function gameOver(gameOverCondition){
+        GAMEOVER_SCREEN.classList.add("fadeIn");
         GAMEOVER_SCREEN.style.display = "flex";
         let gameOverTitle = document.querySelectorAll("#endScreen .title h1")[0];
         let gameOverDesc = document.querySelectorAll("#endScreen .title h3")[0];

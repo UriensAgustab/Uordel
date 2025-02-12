@@ -214,6 +214,16 @@ header .item.disabled img{
     background-color: rgba(255, 0, 0, 0.8);
 }
 
+#endScreen.fadeIn{
+    animation-name: fadeIn;
+    animation-duration: 1s;
+}
+
+@keyframes fadeIn{
+    from {opacity: 0%;}
+    to {opacity: 100%;}
+}
+
 #endScreen .title{
     display: flex;
     flex-direction: column;
