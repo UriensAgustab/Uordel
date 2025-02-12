@@ -1,0 +1,243 @@
+* {
+    font-family: HelveticaNeue;
+}
+
+@font-face {
+    font-family: cocoGoose;
+    src: url(fonts/Cocogoose-Light.ttf);
+}
+
+@font-face {
+    font-family: HelveticaNeue;
+    src: url(fonts/HelveticaNeueMedium.otf);
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    min-height: 100vh;
+}
+
+header {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 33% 33% 33%;
+    margin-bottom: 10px;
+    border-bottom: solid 2px gray;
+}
+
+header .headerCenter {
+    grid-column-start: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+header .headerLeft {
+    grid-column-start: 3;
+    display: flex;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+header h2 {
+    font-size: 2rem;
+    margin: 0;
+    display: block;
+}
+
+header .item{
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    padding: 0 5px;
+}
+
+header .item:hover{
+    background-color: lightgray;
+}
+
+header .item img{
+    height: 60%;
+}
+
+header .item.disabled{
+    background-color: rgb(114, 114, 114)
+}
+
+header .item.disabled img{
+    -webkit-filter: invert(100%);
+    filter: invert(100%);
+}
+
+#wordsGrid{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50vw;
+}
+
+.row {
+    display: flex;
+}
+
+.row div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 2rem;
+    height: 2rem;
+    padding: 10px;
+    margin: 3px;
+    font-size: 2rem;
+
+    border-color: darkgray;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 10px;
+}
+
+.row div.selected {
+    border-color: rgb(80, 179, 255);
+}
+
+.row div.none {
+    border-color: transparent;
+    transition-duration: 0.5s;
+    color: white;
+    background-color: #3A3A3C;
+}
+
+.row div.wrongPos {
+    border-color: transparent;
+    transition-duration: 0.5s;
+    color: white;
+    background-color: #B59F3B;
+}
+
+.row div.good {
+    border-color: transparent;
+    transition-duration: 0.5s;
+    color: white;
+    background-color: #538D4E;
+}
+
+.keyRow{
+    display: flex;
+    justify-content: center;
+}
+
+.keyRow button{
+    width: 3rem;
+    height: 4.5rem;
+    font-size: 1.5rem;
+    border-radius: 10px;
+    border-width: 0px;
+    margin: 2px;
+}
+
+.keyRow button:hover{
+    transition: 0.5s;
+    background-color: darkgray;
+    cursor: pointer;
+}
+
+.keyRow button:not(:hover){
+    transition: 0.5s;
+    background-color: rgb(225, 225, 225);
+}
+
+.keyRow button.specialButton{
+    width: 4.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.keyRow button.none, button.wrongPos, button.good {
+    transition-duration: 0.5s;
+    color: white;
+}
+
+.keyRow button.none:not(:hover) {
+    background-color: #3A3A3C;
+}
+
+.keyRow button.none:hover {
+    background-color: #242425;
+}
+
+.keyRow button.wrongPos:not(:hover) {
+    background-color: #B59F3B;
+}
+
+.keyRow button.wrongPos:hover {
+    background-color: #8d7c2e;
+}
+
+.keyRow button.good:not(:hover) {
+    background-color: #538D4E;
+}
+
+.keyRow button.good:hover {
+    background-color: #32552f;
+}
+
+.keyRow img{
+    width: 45%;
+}
+
+#endScreen{
+    height: 100vh;
+    width: 100vw;
+
+    position: absolute;
+    z-index: 99;
+    background-color: black;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    color: white;
+}
+
+#endScreen.victory{
+    background-color: rgba(50, 85, 47, 0.8);
+}
+
+#endScreen.defeat{
+    background-color: rgba(255, 0, 0, 0.8);
+}
+
+#endScreen .title{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#endScreen .title h1{
+    margin: 0;
+    margin-bottom: 0.5rem;
+}
+
+#endScreen .title h3{
+    margin: 0;
+    margin-bottom: 1rem;
+}
+
+#endScreen button{
+    border: none;
+    border-radius: 20px;
+    padding: 1rem;
+    font-size: 1.4rem;
+}
+
+#endScreen button:hover{
+    cursor: pointer;
+}
