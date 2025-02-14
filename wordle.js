@@ -41,6 +41,20 @@ document.addEventListener("keydown", (event) => {
         return;
     }
 
+    if (event.key.toUpperCase() == "ARROWRIGHT") {
+        if(espaiSeleccionatNum<arrayEspaisFila.length-1){
+            seleccionarEspai(espaiSeleccionatNum+1);
+        }
+        return;
+    }
+
+    if (event.key.toUpperCase() == "ARROWLEFT") {
+        if(espaiSeleccionatNum>0){
+            seleccionarEspai(espaiSeleccionatNum-1);
+        }
+        return;
+    }
+
     if (event.key.length > 1){
         return;
     }
@@ -64,7 +78,7 @@ function iniciarJoc(){
     getRow();
     seleccionarEspai(0);
     paraula = VALID_GUESSES[getRandomNumber(0,VALID_GUESSES.length-1)].toUpperCase();
-    console.log(paraula);
+    //console.log(paraula);
 }
 
 function reiniciarJoc(){
@@ -165,9 +179,11 @@ function validarLletresParaula(){
     intents++;
     let arrayParaula = paraula.toUpperCase().split('');
     // COMPROVA LLETRES EN MATEIXA POSICIÓ
+    var goodLettersQuant = 0;
     for (let i=0; i<arrayEspaisFila.length; i++){
         if (arrayEspaisFila[i].innerHTML == arrayParaula[i]){
-            pintarEspai(arrayEspaisFila[i], i+1, "good");
+            goodLettersQuant++;
+            pintarEspai(arrayEspaisFila[i], i+1, "good", goodLettersQuant);
             arrayParaula[i] = null;
         }
     }
@@ -220,11 +236,17 @@ function validarLletresParaula(){
     }, tempsEspera);
 }
 
-function pintarEspai(espai, multiplicadorEspera, classe){
+function pintarEspai(espai, multiplicadorEspera, classe, pitchShiftQuant){
     if (intents == MAX_INTENTS){
         multiplicadorEspera *= 3;
     }
     var paintAudio = new Audio('sounds/'+classe+'.mp3');
+    if (pitchShiftQuant !== undefined){
+        paintAudio.playbackRate = 1 + 0.1 * pitchShiftQuant;
+        if (paintAudio.preservesPitch !== undefined) {
+            paintAudio.preservesPitch = false;
+        }
+    }
 
     let espera = (esperaPintarEspais * multiplicadorEspera)*0.001;
     espai.style.transitionDelay = espera + "s";
