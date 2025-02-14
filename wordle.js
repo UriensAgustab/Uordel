@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("delete").addEventListener('click', borrarLletra);
     document.getElementById("enter").addEventListener('click', comprovarParaula);
     document.addEventListener("keydown", (event) => {
+        var audio = new Audio('sounds/fart.mp3');
+        audio.play();
         if (!jocActiu){ return; }
 
         if (event.key == " ") {
