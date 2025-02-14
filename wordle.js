@@ -8,6 +8,7 @@ let jocActiu = false;
 let intents;
 let espaiSeleccionat = null;
 let espaiSeleccionatNum;
+let esperaPintarEspais = 300;
 const MAX_INTENTS = 6;
 
 let arrayEspaisFila;
@@ -15,7 +16,7 @@ let arrayEspaisFila;
 document.getElementsByTagName("body")[0].addEventListener("load", iniciarJoc())
 let resetButtons = document.getElementsByClassName("reset");
 for (let i=0; i<resetButtons.length; i++){
-    resetButtons[i].addEventListener('click', iniciarJoc);
+    resetButtons[i].addEventListener('click', reiniciarJoc);
 }
 document.getElementById("clue").addEventListener('click', pista);
 for (let i=0; i<ARRAY_TECLES.length; i++){
@@ -26,16 +27,9 @@ for (let i=0; i<ARRAY_TECLES.length; i++){
 document.getElementById("delete").addEventListener('click', borrarLletra);
 document.getElementById("enter").addEventListener('click', comprovarParaula);
 document.addEventListener("keydown", (event) => {
-        var audio = new Audio('sounds/fart.mp3');
-        audio.play();
     if (!jocActiu){ return; }
 
-    if (event.key == " ") {
-        if (espaiSeleccionatNum < arrayEspaisFila.length-1){
-            seleccionarEspai(espaiSeleccionatNum+1);
-        }
-        return;
-    }
+    var audio = new Audio('sounds/fart.mp3');
 
     if (event.key.toUpperCase() == "ENTER") {
         comprovarParaula();
@@ -48,6 +42,13 @@ document.addEventListener("keydown", (event) => {
     }
 
     if (event.key.length > 1){
+        return;
+    }
+
+    if (event.key == " ") {
+        if (espaiSeleccionatNum < arrayEspaisFila.length-1){
+            seleccionarEspai(espaiSeleccionatNum+1);
+        }
         return;
     }
 
@@ -64,12 +65,17 @@ function iniciarJoc(){
     seleccionarEspai(0);
     paraula = VALID_GUESSES[getRandomNumber(0,VALID_GUESSES.length-1)].toUpperCase();
     console.log(paraula);
-    let arrayEspais = document.querySelectorAll("#wordsGrid .row div");
+}
+
+function reiniciarJoc(){
+    iniciarJoc();
+
     document.getElementById("clue").classList.remove("disabled");
     GAMEOVER_SCREEN.style.display = "none";
     GAMEOVER_SCREEN.classList.remove("fadeIn");
     GAMEOVER_SCREEN.classList.remove("victory");
     GAMEOVER_SCREEN.classList.remove("defeat");
+    let arrayEspais = document.querySelectorAll("#wordsGrid .row div");
     for (let i=0; i<arrayEspais.length; i++){
         arrayEspais[i].innerHTML = '';
         arrayEspais[i].style.transition = "0s";
@@ -83,6 +89,9 @@ function iniciarJoc(){
         ARRAY_TECLES[i].classList.remove("wrongPos");
         ARRAY_TECLES[i].classList.remove("good");
     }
+
+    var reiniciarAudio = new Audio('sounds/reset.mp3');
+    reiniciarAudio.play();
 }
 
 function pista(){
@@ -94,6 +103,7 @@ function pista(){
         let tecla = buscarTecla(paraula.charAt(i));
         if (!tecla.classList.contains("wrongPos") && !tecla.classList.contains("good")) {
             tecla.classList.add("wrongPos");
+            new Audio("sounds/clue.mp3").play();
             return;
         }
     }
@@ -108,10 +118,14 @@ function gameOver(gameOverCondition){
     let gameOverTitle = document.querySelectorAll("#endScreen .title h1")[0];
     let gameOverDesc = document.querySelectorAll("#endScreen .title h3")[0];
     if (gameOverCondition == "victory"){
+        var winAudio = new Audio('sounds/win.mp3');
+        winAudio.play();
         GAMEOVER_SCREEN.classList.add("victory");
         gameOverTitle.innerHTML = "HAS GUANYAT!";
         gameOverDesc.innerHTML = "T'ha costat " + intents + " intents";
     } else if (gameOverCondition == "defeat"){
+        var looseAudio = new Audio('sounds/loose.mp3');
+        looseAudio.play();
         GAMEOVER_SCREEN.classList.add("defeat");
         gameOverTitle.innerHTML = "HAS PERDUT!";
         gameOverDesc.innerHTML = "La paraula era " + paraula;
@@ -153,7 +167,7 @@ function validarLletresParaula(){
     // COMPROVA LLETRES EN MATEIXA POSICIÓ
     for (let i=0; i<arrayEspaisFila.length; i++){
         if (arrayEspaisFila[i].innerHTML == arrayParaula[i]){
-            pintarEspai(arrayEspaisFila[i], i, "good");
+            pintarEspai(arrayEspaisFila[i], i+1, "good");
             arrayParaula[i] = null;
         }
     }
@@ -165,11 +179,11 @@ function validarLletresParaula(){
                 if (arrayEspaisFila[i].innerHTML == arrayParaula[j]){
                     lletraTrobada = true;
                     arrayParaula[j] = null;
-                    pintarEspai(arrayEspaisFila[i], i, "wrongPos");
+                    pintarEspai(arrayEspaisFila[i], i+1, "wrongPos");
                 }
             }
             if (!lletraTrobada){
-                pintarEspai(arrayEspaisFila[i], i, "none");
+                pintarEspai(arrayEspaisFila[i], i+1, "none");
             }
         }
     }
@@ -181,27 +195,44 @@ function validarLletresParaula(){
         }
     }
 
+    var tempsEspera = esperaPintarEspais * (arrayEspaisFila.length+1);
+    if (intents == MAX_INTENTS) {
+        tempsEspera *= 3;
+    }
     if (paraulaCorrecte){
-        gameOver("victory");
+        setTimeout(() => {
+            gameOver("victory")
+        },tempsEspera);
         return;
     }
 
     if (intents>=MAX_INTENTS){
-        gameOver("defeat");
+        setTimeout(() => {
+            gameOver("defeat")
+        },tempsEspera);
         return;
     }
 
     getRow();
-    seleccionarEspai(0);
-    jocActiu = true;
+    setTimeout(() => {
+        seleccionarEspai(0);
+        jocActiu = true;
+    }, tempsEspera);
 }
 
 function pintarEspai(espai, multiplicadorEspera, classe){
-    buscarTecla(espai.innerHTML).classList.add(classe);
+    if (intents == MAX_INTENTS){
+        multiplicadorEspera *= 3;
+    }
+    var paintAudio = new Audio('sounds/'+classe+'.mp3');
 
-    let espera = 0.3 * multiplicadorEspera;
+    let espera = (esperaPintarEspais * multiplicadorEspera)*0.001;
     espai.style.transitionDelay = espera + "s";
     espai.classList.add(classe);
+    setTimeout(()=> {
+        paintAudio.play();
+        buscarTecla(espai.innerHTML).classList.add(classe);
+    }, esperaPintarEspais * multiplicadorEspera);
 }
 
 function buscarTecla(lletra){
